@@ -14,14 +14,16 @@ This bucketlist API built on flask.
 
 ## Usage:
 
-*Clone the repo:
-*Install requirements.
-`pip install -r requirements.txt` 
+* Clone the repo:
+* Install requirements.
+ `pip install -r requirements.txt`
+
 * Perform database migrations.
 ```
 python manage.py db init
 python manage.py db migrate
 ```
+
 * Run the application
 `python authentication.py`
 
