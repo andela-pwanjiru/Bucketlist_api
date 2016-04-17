@@ -1,7 +1,7 @@
 from flask.ext.testing import TestCase
 
-from bucket_list.api import app, db
-from bucket_list.config import TestingConfig
+from api import app, db
+from config import TestingConfig
 
 
 class BaseTestCase(TestCase):

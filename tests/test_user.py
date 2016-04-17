@@ -3,8 +3,8 @@ import unittest
 import flask.ext.testing
 from .test_base import BaseTestCase
 from flask.ext.login import current_user
-from bucket_list.api import app, db
-from bucket_list.models import User
+from api import app, db
+from models import User
 
 
 class TestUser(BaseTestCase):

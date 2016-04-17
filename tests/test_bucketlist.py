@@ -2,8 +2,8 @@ import os
 import unittest
 import flask.ext.testing
 from .test_base import BaseTestCase
-from checkpoint2.api import app, db
-from checkpoint2.models import Bucketlist, Item
+from api import app, db
+from models import Bucketlist, Item
 
 
 class TestBucketList(BaseTestCase):
