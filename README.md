@@ -1,28 +1,29 @@
 
 # Bucketlist API
 This bucketlist API built on flask.
+
 # Features:
+
 1. A user can log in.
 2. A user is authenticated.
 3. Create new bucketlist items.
 4. Update and delete the items.
 5. Retrieve a list of all created bucket lists by a registered user.
-
 6 .Pagination - You can specify the number of results you wish to have returned.
 7 .Search - get a particular bucketlist.
 
 ## Usage:
 
-    *Clone the repo:
-    *Install requirements.
-    `pip install -r requirements.txt` 
-    * Perform database migrations.
-    ```
-    python manage.py db init
-    python manage.py db migrate
-    ```
-    * Run the application
-    `python authentication.py`
+*Clone the repo:
+*Install requirements.
+`pip install -r requirements.txt` 
+* Perform database migrations.
+```
+python manage.py db init
+python manage.py db migrate
+```
+* Run the application
+`python authentication.py`
 
 
 ## EndPoints
