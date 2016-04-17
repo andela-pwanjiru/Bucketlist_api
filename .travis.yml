@@ -1,0 +1,21 @@
+language: python
+python:
+  - "2.7"
+
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+env:
+  global:
+    - TRAVIS_BUILD=true
+    - DB=postgres
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+# command to run tests
+script: nosetests  --with-coverage --cover-package=.
+
+after_success: coveralls
