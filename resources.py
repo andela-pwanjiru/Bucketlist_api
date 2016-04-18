@@ -130,8 +130,8 @@ class BucketlistResource(Resource):
         Raises:
             Error."""
         try:
-            bl = db.session.query(models.Bucketlist).filter_by(id=id).one()
-            return marshal(bl, bucketlist_fields)
+            bucketlst = db.session.query(models.Bucketlist).filter_by(id=id).one()
+            return marshal(bucketlst, bucketlist_fields)
         except SQLAlchemyError:
             return {'message': 'No Result'}
 

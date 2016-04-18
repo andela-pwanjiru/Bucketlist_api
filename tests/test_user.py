@@ -3,7 +3,7 @@ import unittest
 import flask.ext.testing
 from .test_base import BaseTestCase
 from flask.ext.login import current_user
-from api import app, db
+from Bucketlist_api.api import app, db
 from models import User
 
 

@@ -61,5 +61,3 @@ all other requests. The header should be given the name `token`
 ## Testing
 Tests are run from the root folder
 `nosetests`
-To include Coverage in the tests
-`nosetests --with-coverage --cover-package=.`

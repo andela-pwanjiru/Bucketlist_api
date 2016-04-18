@@ -8,7 +8,8 @@ class BaseTestCase(TestCase):
     """A base test case for User and Bucketlist test classes."""
 
     def create_app(self):
-        """Set up the app for testing. Returns an `app` instance."""
+        """Set up the test test_client. Returns an `app` instance."""
+        # set up cofig options
         app.config.from_object(TestingConfig)
         self.client = app.test_client()
         return app
@@ -21,23 +22,17 @@ class BaseTestCase(TestCase):
         get_token = self.client.post('/auth/login', data=dict(
             username='username', password='password'))
         self.token = get_token.json['token']
-        self.bl1 = self.client.post('/bucketlists/', data=dict(
+        self.bucketlst1 = self.client.post('/bucketlists/', data=dict(
             name='First Bucketlist'), headers={'token': self.token})
-        self.bl2 = self.client.post('/bucketlists/', data=dict(
+        self.bucketlst2 = self.client.post('/bucketlists/', data=dict(
             name='Second Bucketlist'), headers={'token': self.token})
-        self.bl3 = self.client.post('/bucketlists/', data=dict(
-            name='Third Bucketlist'), headers={'token': self.token})
-        self.bl4 = self.client.post('/bucketlists/', data=dict(
-            name='Forth Bucketlist'), headers={'token': self.token})
-        self.bl5 = self.client.post('/bucketlists/', data=dict(
-            name='Fifth Bucketlist'), headers={'token': self.token})
 
-        self.bli1 = self.client.post(
-            '/bucketlists/{0}/items/'.format(self.bl1.json['id']),
+        self.bucketlistitem1 = self.client.post(
+            '/bucketlists/{0}/items/'.format(self.bucketlistitem1.json['id']),
             data=dict(name='First Bucketlist Item Name', done='0'),
             headers={'token': self.token})
-        self.bli2 = self.client.post(
-            '/bucketlists/{0}/items/'.format(self.bl1.json['id']),
+        self.bucketlistitem2 = self.client.post(
+            '/bucketlists/{0}/items/'.format(self.bucketlistitem2.json['id']),
             data=dict(name='Second Bucketlist Item Name', done='1'),
             headers={'token': self.token})
 
@@ -57,6 +52,6 @@ class BaseTestCase(TestCase):
         aLKkXaa-lIs0c_4'
 
     def tearDown(self):
-        """Run instructions after each test is executed."""
+        """Destroy test db at end of tests."""
         db.session.remove()
         db.drop_all()
