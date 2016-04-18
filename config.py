@@ -15,8 +15,7 @@ class Config(object):
     REMEMBER_COOKIE_DURATION = 600
     TRAP_BAD_REQUEST_ERRORS = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Andela2015@localhost/bucketlist'
-
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 class DevelopmentConfig(Config):
     """Config for Development."""

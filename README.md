@@ -14,7 +14,7 @@ This bucketlist API built on flask.
 
 ## Usage:
 
-* Clone the repo:
+* Clone the repo: git@github.com:andela-pwanjiru/Bucketlist_api.git
 * Install requirements.
  `pip install -r requirements.txt`
 

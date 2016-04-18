@@ -1,10 +1,9 @@
 import time
-from flask import jsonify, abort, request
+from flask import request
 from flask_restful.reqparse import RequestParser
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import BadRequestKeyError
-from flask.ext.bcrypt import generate_password_hash, check_password_hash
 from flask.ext.login import login_required, current_user
 from flask_restful import Resource, fields, marshal
 import models
@@ -38,7 +37,7 @@ user_fields = {
 
 
 class Bucketlists(Resource):
-    """Resource for showing and handling all actions on bucketlists. 
+    """Resource for showing and handling all actions on bucketlists.
     Endpoint:
         '/bucketlists/'
     Methods:
@@ -192,6 +191,15 @@ class BucketlistItem(Resource):
     """
 
     decorators = [login_required]
+
+    def get(self, id, item_id):
+        """Show an item from bucketlist `id` specified by `item_id`."""
+        try:
+            bqi = db.session.query(models.Item).filter_by(
+                bucketlist_id=id, id=item_id).one()
+            return marshal(bqi, bucketlist_item_fields)
+        except NoResultFound:
+            return {'message': 'No Result'}
 
     def put(self, id, item_id):
         """Edit an item from bucketlist `id` specified by `item_id`."""

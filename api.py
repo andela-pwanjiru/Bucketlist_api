@@ -1,8 +1,8 @@
 import os
 import base64
-from dotenv import load_dotenv
+from flask import jsonify
 from os.path import join, dirname
-from os.path import join, dirname
+from dotenv import Dotenv
 from flask import Flask, request, Response, g
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
@@ -11,9 +11,8 @@ from flask.ext.login import LoginManager, login_required, \
     current_user
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, \
     BadSignature, SignatureExpired
-
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+os.environ.update(dotenv)
 
 import config
 # creating a Flask instance

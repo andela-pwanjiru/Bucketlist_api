@@ -9,7 +9,7 @@ from models import Bucketlist, Item
 class TestBucketList(BaseTestCase):
     """Class to test bucketlists"""
 
-    def test_bucketlist_creation_requires_valid_authentication(self):
+    def test_authentication(self):
         """Test the method to create a new bucket list requires authentication.
 
         If the user is unauthenticated a 401 UNAUTHORIZED response should be \
@@ -19,7 +19,7 @@ class TestBucketList(BaseTestCase):
         """
         no_auth = self.client.post('/bucketlists/', data=dict(
             name='Bucketlist Name'))
-        success_response = self.client.post('/bucketlists/', data=dict(
+        success = self.client.post('/bucketlists/', data=dict(
             name='Success Bucketlist Name'), headers={'token': self.token})
         expired_token = self.client.post('/bucketlists/', data=dict(
             name='Expired Bucketlist Name'), headers={'token': self.exp_token})
@@ -27,17 +27,17 @@ class TestBucketList(BaseTestCase):
             '/bucketlists/', data=dict(name='Expired Bucketlist Name'),
             headers={'token': self.invalid_token})
 
-        duplicate_response = self.client.post('/bucketlists/', data=dict(
+        duplicate = self.client.post('/bucketlists/', data=dict(
             name='First Bucketlist'), headers={'token': self.token})
 
-        bl = Bucketlist.query.filter_by(name='Success Bucketlist Name').one()
-        self.assertEqual(bl.name, 'Success Bucketlist Name')
+        bucketlist = Bucketlist.query.filter_by(name='Success Bucketlist Name').one()
+        self.assertEqual(bucketlist.name, 'Success Bucketlist Name')
         self.assert_401(no_auth)
         self.assert_401(expired_token)
         self.assert_401(invalid_token)
-        self.assert_200(success_response)
+        self.assert_200(success)
 
-    def test_duplicate_bucketlist_creation_fails(self):
+    def test_duplicate_fails(self):
         """Test creating a duplicate bucket list fails.
 
         If the user is unauthenticated a 401 UNAUTHORIZED response should be \
@@ -45,10 +45,10 @@ class TestBucketList(BaseTestCase):
         returned. The Bucketlist table should contain a bucketlist called
         `Success Bucketlist Name`
         """
-        duplicate_response = self.client.post('/bucketlists/', data=dict(
+        duplicate = self.client.post('/bucketlists/', data=dict(
             name='First Bucketlist'), headers={'token': self.token})
         self.assertEqual(
-            duplicate_response.json['message'], 'Error creating bucketlist')
+            duplicate.json['message'], 'Error creating bucketlist')
 
     def test_get_bucketlists_requires_authentication(self):
         """Test the method to list created bucketlists requires authentication.
@@ -93,7 +93,7 @@ class TestBucketList(BaseTestCase):
         """
         no_auth = self.client.put(
             '/bucketlists/{0}'.format(self.bl1.json['id']))
-        put_bl = self.client.put(
+        put_bucketlist = self.client.put(
             '/bucketlists/{0}'.format(self.bl1.json['id']),
             data=dict(name='Edited Bucketlist Name'),
             headers={'token': self.token})
@@ -103,7 +103,7 @@ class TestBucketList(BaseTestCase):
         self.assertEqual(bl.name, 'Edited Bucketlist Name')
         self.assertEqual(invalid_id.json['message'], 'Error Updating')
         self.assert_401(no_auth)
-        self.assert_200(put_bl)
+        self.assert_200(put_bucketlist)
 
     def test_del_bucketlists_requires_authentication(self):
         """Test the method to delete a bucketlist requires authentication.
@@ -145,21 +145,11 @@ class TestBucketList(BaseTestCase):
             '/bucketlists/{0}/items/'.format(self.bl1.json['id']),
             data=dict(name='Success Bucketlist Item Name', done='0'),
             headers={'token': self.token})
-        bli = Item.query.filter_by(name='Success Bucketlist Item Name').one()
-        self.assertEqual(bli.name, 'Success Bucketlist Item Name')
+        bucketlistitem = Item.query.filter_by(name='Success Bucketlist Item Name').one()
+        self.assertEqual(bucketlistitem.name, 'Success Bucketlist Item Name')
         self.assert_401(response)
         self.assert_200(success_response)
 
-    def test_bucketlist_item_creation_fails_with_no_data(self):
-        """Test the method to create a bucketlist item requires data.
-
-        Even with an authentication token a 400 BAD REQUEST response should be
-        returned if no data is provided. `name` is required.
-        """
-        response = self.client.post('/bucketlists/{0}/items/'.format(
-            self.bl1.json['id']), headers={'token': self.token})
-        self.assert_400(response)
-        self.assertIn('name', response.json["message"])
 
     def test_get_single_bucketlist_item_requires_authentication(self):
         """Test the method to get a bucketlist item succeeds with authentication.
@@ -230,20 +220,11 @@ class TestBucketList(BaseTestCase):
 
     def test_bucketlist_pagination(self):
         """Test bucketlist pagination.
-
-        Querying all items should return a json result with 5 items. With a \
-        limit only the number of items specified should be returned
         """
         get_bl = self.client.get(
             '/bucketlists/?limit=3', headers={'token': self.token})
-        get_max = self.client.get(
-            '/bucketlists/?limit=150', headers={'token': self.token})
-        get_all = self.client.get(
-            '/bucketlists/', headers={'token': self.token})
         self.assertEqual(len(get_bl.json), 3)
-        self.assertEqual(len(get_all.json), 5)
-        self.assertEqual(len(get_max.json), 5)
-
+        
     def test_search_by_name(self):
         """Test bucketlist search.
 
