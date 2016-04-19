@@ -26,7 +26,4 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """Testing configurations."""
     TESTING = True
-    if os.getenv('TRAVIS_BUILD', None):
-        SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Andela2015@localhost/tests'
-    else:
-        SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Andela2015@localhost/tests'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_URL')
