@@ -1,9 +1,8 @@
 import os
 import unittest
-import flask.ext.testing
-from .test_base import BaseTestCase
+from tests import BaseTestCase
 from flask.ext.login import current_user
-from Bucketlist_api.api import app, db
+from ..api import db
 from models import User
 
 

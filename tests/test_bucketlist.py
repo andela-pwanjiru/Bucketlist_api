@@ -1,8 +1,7 @@
 import os
 import unittest
-import flask.ext.testing
-from .test_base import BaseTestCase
-from api import app, db
+from tests import BaseTestCase
+from ..api import db
 from models import Bucketlist, Item
 
 
