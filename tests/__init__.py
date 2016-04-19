@@ -1,6 +1,6 @@
 from flask.ext.testing import TestCase
-from ..api import app, db
-from ..config import TestingConfig
+from api import app, db
+from config import TestingConfig
 
 
 class BaseTestCase(TestCase):
@@ -21,17 +21,22 @@ class BaseTestCase(TestCase):
         get_token = self.client.post('/auth/login', data=dict(
             username='username', password='password'))
         self.token = get_token.json['token']
-        self.bucketlst1 = self.client.post('/bucketlists/', data=dict(
+        self.bl1 = self.client.post('/bucketlists/', data=dict(
             name='First Bucketlist'), headers={'token': self.token})
-        self.bucketlst2 = self.client.post('/bucketlists/', data=dict(
+        self.bl2 = self.client.post('/bucketlists/', data=dict(
             name='Second Bucketlist'), headers={'token': self.token})
-
-        self.bucketlistitem1 = self.client.post(
-            '/bucketlists/{0}/items/'.format(self.bucketlistitem1.json['id']),
+        self.bl3 = self.client.post('/bucketlists/', data=dict(
+            name='Third Bucketlist'), headers={'token': self.token})
+        self.bl4 = self.client.post('/bucketlists/', data=dict(
+            name='Forth Bucketlist'), headers={'token': self.token})
+        self.bl5 = self.client.post('/bucketlists/', data=dict(
+            name='Fifth Bucketlist'), headers={'token': self.token})
+        self.bli1 = self.client.post(
+            '/bucketlists/{0}/items/'.format(self.bl1.json['id']),
             data=dict(name='First Bucketlist Item Name', done='0'),
             headers={'token': self.token})
-        self.bucketlistitem2 = self.client.post(
-            '/bucketlists/{0}/items/'.format(self.bucketlistitem2.json['id']),
+        self.bli2 = self.client.post(
+            '/bucketlists/{0}/items/'.format(self.bl1.json['id']),
             data=dict(name='Second Bucketlist Item Name', done='1'),
             headers={'token': self.token})
 

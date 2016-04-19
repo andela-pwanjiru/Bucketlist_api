@@ -9,18 +9,6 @@ from models import User
 class TestUser(BaseTestCase):
     """Test user functions."""
 
-    def test_user_can_log_in(self):
-        """Test login success.
-
-        With correct login credentials a token should be returned and set the
-        user online status as True.
-        """
-        success = self.client.post('/auth/login', data=dict(
-            username='username', password='password'))
-        user = db.session.query(User).filter_by(username='username').one()
-        self.assertTrue(user.online)
-        self.assertIn('token', success.json)
-
     def test_wrong_login(self):
         """Test login failure with wrong credentials.
 

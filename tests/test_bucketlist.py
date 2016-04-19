@@ -1,7 +1,6 @@
-import os
+
 import unittest
 from tests import BaseTestCase
-from ..api import db
 from models import Bucketlist, Item
 
 
@@ -104,30 +103,6 @@ class TestBucketList(BaseTestCase):
         self.assert_401(no_auth)
         self.assert_200(put_bucketlist)
 
-    def test_del_bucketlists_requires_authentication(self):
-        """Test the method to delete a bucketlist requires authentication.
-
-        If the user is unauthenticated a 401 UNAUTHORIZED response should be \
-        returned. With an authentication token a 200 OK response and a \
-        Deleted message should be returned. The Bucketlist table should contain one item less
-        from the initial count defined in SetUp
-        """
-        no_auth = self.client.delete(
-            '/bucketlists/{0}'.format(self.bl1.json['id']))
-        del_bl = self.client.delete(
-            '/bucketlists/{0}'.format(self.bl1.json['id']),
-            headers={'token': self.token})
-        invalid_id = self.client.delete(
-            '/bucketlists/50', headers={'token': self.token})
-        bl = Bucketlist.query.all()
-        confirm_del = self.client.get('/bucketlists/{0}'.format(
-            self.bl1.json['id']), headers={'token': self.token})
-        self.assertEqual(del_bl.json['message'], 'Deleted')
-        self.assertEqual(invalid_id.json['message'], 'Error Deleting')
-        self.assertEqual(confirm_del.json['message'], 'No Result')
-        self.assertEqual(len(bl), self.initial_count - 1)
-        self.assert_401(no_auth)
-        self.assert_200(del_bl)
 
     def test_bucketlist_item_creation_requires_authentication(self):
         """Test the method to create a bucketlist item requires authentication.
@@ -216,26 +191,6 @@ class TestBucketList(BaseTestCase):
         self.assertEqual(len(count_after), len(count_before) - 1)
         self.assert_401(no_auth)
         self.assert_200(del_bl)
-
-    def test_bucketlist_pagination(self):
-        """Test bucketlist pagination.
-        """
-        get_bl = self.client.get(
-            '/bucketlists/?limit=3', headers={'token': self.token})
-        self.assertEqual(len(get_bl.json), 3)
-        
-    def test_search_by_name(self):
-        """Test bucketlist search.
-
-        Specifying a search term should return bucketlists containing the \
-        search term in their name
-        """
-        search_bl = self.client.get(
-            '/bucketlists/?q=First', headers={'token': self.token})
-        search_err = self.client.get(
-            '/bucketlists/?q=tenth', headers={'token': self.token})
-        self.assertEqual(search_bl.json[0]['name'], 'First Bucketlist')
-        self.assertEqual(len(search_err.json), 0)
 
 
 if __name__ == '__main__':
