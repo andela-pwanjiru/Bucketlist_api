@@ -56,12 +56,14 @@ class Bucketlists(Resource):
         """
 
         try:
+            page = int(request.args['page'])
             # `limit` specifies the number of results
             # Get the limit specified by the user
             limit = int(request.args['limit'])
             # If limit specified isn't number type, set to 20
         except BadRequestKeyError:
-            limit = 20
+            page = 1
+            limit = 5
             # If limit is greater than 100 default to 100
         if limit > 100:
             limit = 100
@@ -76,10 +78,34 @@ class Bucketlists(Resource):
         try:
             bucketlst = (models.Bucketlist).query.filter(
                 models.Bucketlist.created_by == current_user.id,
-                models.Bucketlist.name.like('%' + q + '%')).paginate(1, limit)
-            return marshal(bucketlst.items, bucketlist_fields)
+                models.Bucketlist.name.like('%' + q + '%')).paginate(page, limit)
+
         except SQLAlchemyError:
             return {'message': 'Error'}
+
+        current_url = request.url
+        next_url, prev_url = "", ""
+
+        if bucketlst.has_next:
+            next_page = bucketlst.next_num
+            items = bucketlst.per_page
+            next_url = str(current_url[0:current_url.rindex('/')]) + \
+                "?page=%s&limit=%s" % (str(next_page), str(items))
+
+        if bucketlst.has_prev:
+            prev_page = bucketlst.prev_num
+            items = bucketlst.per_page
+            prev_url = str(current_url[0:current_url.rindex('/')]) + \
+                "?page=%s&limit=%s" % (str(prev_page), str(items))
+
+        results = marshal(bucketlst.items, bucketlist_fields)
+        info_dict = {}
+        # results with paging
+        if len(results) > 0:
+            info_dict = {"data": results, "paging":
+                       {"previous": prev_url, "next": next_url,
+                        "pageNum": page, "count": len(bucketlst.items)}}
+        return info_dict
 
     def post(self):
         """
