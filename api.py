@@ -11,8 +11,13 @@ from flask.ext.login import LoginManager, login_required, \
     current_user
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, \
     BadSignature, SignatureExpired
-dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env"))
-os.environ.update(dotenv)
+
+try:
+    dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+    os.environ.update(dotenv)
+    # If there is no .env file, silently continue.
+except IOError:
+    pass
 
 import config
 # creating a Flask instance
