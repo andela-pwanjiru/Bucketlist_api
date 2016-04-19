@@ -2,7 +2,7 @@ import os
 import unittest
 from tests import BaseTestCase
 from flask.ext.login import current_user
-from ..api import db
+from api import db
 from models import User
 
 
