@@ -57,6 +57,14 @@ all other requests. The header should be given the name `token`
     * PUT - Update a bucket list item
     * DELETE - Delete an item from a bucket list
 
+To paginate :
+* **`/bucketlists?page=""&limit=""`**
+    * GET - List bucketlist according to the limit specified.
+
+To search :
+* **`/bucketlists?q=""`**
+    * GET - List the searched bucketlist       
+
 
 
 ## Testing
