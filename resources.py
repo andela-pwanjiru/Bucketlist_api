@@ -254,10 +254,10 @@ class BucketlistItem(Resource):
             db.session.delete(bqi)
             db.session.commit()
             if bqi:
-                return {'message': 'Deleted'}
+                return {'message': 'Item deleted'}
         except SQLAlchemyError:
             db.session.rollback()
-        return {'message': 'Error Deleting'}
+        return {'message': 'Error Deleting item'}
 
 
 class BucketlistItems(Resource):
