@@ -10,6 +10,7 @@ This bucketlist API built on flask.
 3. Create new bucketlist items.
 4. Update and delete the items.
 5. Retrieve a list of all created bucket lists by a registered user.
+
 6 .Pagination - You can specify the number of results you wish to have returned.
 7 .Search - get a particular bucketlist.
 
@@ -26,7 +27,7 @@ python manage.py db migrate
 ```
 
 * Run the application
-`python authentication.py`
+`python api.py`
 
 
 ## EndPoints
@@ -60,5 +61,5 @@ all other requests. The header should be given the name `token`
 
 
 ## Testing
-Tests are run from the root folder
+To run tests:
 `nosetests`
