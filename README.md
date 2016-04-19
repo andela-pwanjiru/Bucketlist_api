@@ -1,4 +1,5 @@
-
+[![Build Status](https://travis-ci.org/andela-pwanjiru/Bucketlist_api.svg?branch=develop)](https://travis-ci.org/andela-pwanjiru/Bucketlist_api)
+[![Coverage Status](https://coveralls.io/repos/github/andela-pwanjiru/Bucketlist_api/badge.svg?branch=develop)](https://coveralls.io/github/andela-pwanjiru/Bucketlist_api?branch=develop)
 # Bucketlist API
 This bucketlist API built on flask.
 
