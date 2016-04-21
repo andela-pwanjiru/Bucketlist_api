@@ -95,6 +95,6 @@ class User(db.Model, UserMixin):
         Returns:
             A signed string serialized with the internal serializer.
         """
-        serial = Serializer(os.environ.get('SECRET'), expires_in=18000)
+        serial = Serializer(os.environ.get('SECRET'), expires_in=180000)
         data = [str(self.id), self.password]
         return serial.dumps(data)
