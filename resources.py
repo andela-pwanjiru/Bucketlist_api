@@ -156,10 +156,11 @@ class BucketlistResource(Resource):
         Raises:
             Error."""
         try:
-            bucketlst = db.session.query(models.Bucketlist).filter_by(id=id).one()
+            bucketlst = db.session.query(models.Bucketlist).filter_by(
+                id=id, created_by=current_user.id).one()
             return marshal(bucketlst, bucketlist_fields)
         except SQLAlchemyError:
-            return {'message': 'No Result'}
+            return {'message': 'No Result'}, 400
 
     def put(self, id):
         """Update the bucketlist specified by id.
@@ -176,7 +177,8 @@ class BucketlistResource(Resource):
         args = parser.parse_args()
 
         try:
-            bl = db.session.query(models.Bucketlist).filter_by(id=id).one()
+            bl = db.session.query(models.Bucketlist).filter_by(
+                id=id, created_by=current_user.id).one()
             bl.name = args.name
             bl.date_modified = time.strftime('%Y/%m/%d %H:%M:%S')
             db.session.commit()
@@ -197,7 +199,8 @@ class BucketlistResource(Resource):
             Error.
         """
         try:
-            bq = db.session.query(models.Bucketlist).filter_by(id=id).one()
+            bq = db.session.query(models.Bucketlist).filter_by(
+                id=id, created_by=current_user.id).one()
             db.session.delete(bq)
             db.session.commit()
             if bq:
@@ -230,16 +233,18 @@ class BucketlistItem(Resource):
     def put(self, id, item_id):
         """Edit an item from bucketlist `id` specified by `item_id`."""
         parser = RequestParser()
-        parser.add_argument('name', type=str, required=True)
+        parser.add_argument('name', type=str)
         parser.add_argument('done')
         args = parser.parse_args()
 
         try:
             bli = db.session.query(models.Item).filter_by(
                 bucketlist_id=id, id=item_id).one()
-            bli.name = args.name
-            bli.done = args.done
             bli.date_modified = time.strftime('%Y/%m/%d %H:%M:%S')
+            if args.name:
+                bli.name = args.name
+            if args.done:
+                bli.done = args.done
             db.session.commit()
             return marshal(bli, bucketlist_item_fields)
         except NoResultFound:
@@ -283,7 +288,7 @@ class BucketlistItems(Resource):
              Error
         """
         parser = RequestParser()
-        parser.add_argument('name', type=str, required=True)
+        parser.add_argument('name', type=str)
         parser.add_argument('done')
         parser.add_argument('bucketlist_id')
         args = parser.parse_args()
