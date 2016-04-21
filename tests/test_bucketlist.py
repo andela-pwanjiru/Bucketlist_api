@@ -186,8 +186,8 @@ class TestBucketList(BaseTestCase):
         invalid_id = self.client.delete('/bucketlists/{0}/items/50'.format(
             self.bl1.json['id']), headers={'token': self.token})
         count_after = Item.query.all()
-        self.assertEqual(del_bl.json['message'], 'Deleted')
-        self.assertEqual(invalid_id.json['message'], 'Error Deleting')
+        self.assertEqual(del_bl.json['message'], 'Item deleted')
+        self.assertEqual(invalid_id.json['message'], 'Error Deleting item')
         self.assertEqual(len(count_after), len(count_before) - 1)
         self.assert_401(no_auth)
         self.assert_200(del_bl)
