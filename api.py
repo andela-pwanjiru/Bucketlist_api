@@ -38,8 +38,8 @@ from resources import *
 @app.route('/auth/login', methods=['POST'])
 def login():
     """Log a user in and return an authentication token."""
-    username = request.form['username']
-    password = request.form['password']
+    username = request.form.get('username')
+    password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
     if not user or not user.verify_password(password):
         return jsonify({'message': 'Login Failed'})
