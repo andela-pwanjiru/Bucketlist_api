@@ -1,9 +1,5 @@
-import os
 import unittest
 from tests import BaseTestCase
-from flask.ext.login import current_user
-from api import db
-from models import User
 
 
 class TestUser(BaseTestCase):
@@ -38,7 +34,7 @@ class TestUser(BaseTestCase):
         self.assert_400(no_username)
 
     def test_user_creation_unique_fields(self):
-        """Test registration failure with no data provided.
+        """Test registration failure with fields already existing in DB.
 
         To create a user a username, password and email address are required
         """

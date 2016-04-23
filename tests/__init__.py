@@ -8,7 +8,7 @@ class BaseTestCase(TestCase):
 
     def create_app(self):
         """Set up the test test_client. Returns an `app` instance."""
-        # set up cofig options
+        # set up config options
         app.config.from_object(TestingConfig)
         self.client = app.test_client()
         return app
@@ -16,11 +16,17 @@ class BaseTestCase(TestCase):
     def setUp(self):
         """Run instructions before the each test is executed."""
         db.create_all()
-        self.create_user = self.client.post('/auth/register', data=dict(
+        self.user1 = self.client.post('/auth/register', data=dict(
             username='username', password='password', email='email@email.com'))
         get_token = self.client.post('/auth/login', data=dict(
             username='username', password='password'))
+        self.user2 = self.client.post('/auth/register', data=dict(
+            username='username2', password='password2',
+            email='email2@email.com'))
+        get_token2 = self.client.post('/auth/login', data=dict(
+            username='username2', password='password2'))
         self.token = get_token.json['token']
+        self.token2 = get_token2.json['token']
         self.bl1 = self.client.post('/bucketlists/', data=dict(
             name='First Bucketlist'), headers={'token': self.token})
         self.bl2 = self.client.post('/bucketlists/', data=dict(
@@ -31,6 +37,8 @@ class BaseTestCase(TestCase):
             name='Forth Bucketlist'), headers={'token': self.token})
         self.bl5 = self.client.post('/bucketlists/', data=dict(
             name='Fifth Bucketlist'), headers={'token': self.token})
+        self.bl6 = self.client.post('/bucketlists/', data=dict(
+            name='Sixth Bucketlist'), headers={'token': self.token2})
         self.bli1 = self.client.post(
             '/bucketlists/{0}/items/'.format(self.bl1.json['id']),
             data=dict(name='First Bucketlist Item Name', done='0'),

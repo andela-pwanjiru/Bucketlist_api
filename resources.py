@@ -117,8 +117,6 @@ class Bucketlists(Resource):
         """
         parser = RequestParser()
         parser.add_argument('name', type=str, required=True)
-        parser.add_argument('date_created')
-        parser.add_argument('date_modified')
         args = parser.parse_args()
         current_date = time.strftime('%Y/%m/%d %H:%M:%S')
 
@@ -216,7 +214,7 @@ class BucketlistItem(Resource):
     Url:
         '/bucketlists/<id>/items/<item_id>'
     Methods:
-        'PUT', 'DEL'
+       'GET', 'PUT', 'DEL'
     """
 
     decorators = [login_required]
@@ -228,7 +226,7 @@ class BucketlistItem(Resource):
                 bucketlist_id=id, id=item_id).one()
             return marshal(bqi, bucketlist_item_fields)
         except NoResultFound:
-            return {'message': 'No Result'}
+            return {'message': 'No Result'}, 404
 
     def put(self, id, item_id):
         """Edit an item from bucketlist `id` specified by `item_id`."""
@@ -249,7 +247,7 @@ class BucketlistItem(Resource):
             return marshal(bli, bucketlist_item_fields)
         except NoResultFound:
             db.session.rollback()
-        return {'message': 'Error Updating'}
+        return {'message': 'Error Updating'}, 400
 
     def delete(self, id, item_id):
         """Delete an item from bucketlist `id` specified by `item_id`."""
