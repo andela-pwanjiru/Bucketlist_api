@@ -1,4 +1,3 @@
-
 import unittest
 from tests import BaseTestCase
 from models import Bucketlist, Item

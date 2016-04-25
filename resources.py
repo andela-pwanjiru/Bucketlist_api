@@ -83,20 +83,19 @@ class Bucketlists(Resource):
         except SQLAlchemyError:
             return {'message': 'Error'}
 
+
         current_url = request.url
         next_url, prev_url = "", ""
-
+        base_url = str(current_url[0:current_url.rindex('/')])
         if bucketlst.has_next:
             next_page = bucketlst.next_num
             items = bucketlst.per_page
-            next_url = str(current_url[0:current_url.rindex('/')]) + \
-                "?page=%s&limit=%s" % (str(next_page), str(items))
+            next_url ="{}?page={}&limit={}".format(base_url,str(next_page), str(items))
 
         if bucketlst.has_prev:
             prev_page = bucketlst.prev_num
             items = bucketlst.per_page
-            prev_url = str(current_url[0:current_url.rindex('/')]) + \
-                "?page=%s&limit=%s" % (str(prev_page), str(items))
+            prev_url ="{}?page={}&limit={}".format(base_url,str(prev_page), str(items))
 
         results = marshal(bucketlst.items, bucketlist_fields)
         info_dict = {}
@@ -130,7 +129,7 @@ class Bucketlists(Resource):
 
         except SQLAlchemyError:
             db.session.rollback()
-        return {'message': 'Error creating bucketlist'}
+            return {'message': 'Error creating bucketlist'}
 
 
 class BucketlistResource(Resource):
@@ -286,9 +285,8 @@ class BucketlistItems(Resource):
              Error
         """
         parser = RequestParser()
-        parser.add_argument('name', type=str)
+        parser.add_argument('name', type=str, required=True)
         parser.add_argument('done')
-        parser.add_argument('bucketlist_id')
         args = parser.parse_args()
 
         current_date = time.strftime('%Y/%m/%d %H:%M:%S')
